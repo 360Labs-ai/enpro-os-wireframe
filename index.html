@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enpro OS Wireframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* Enpro skin, from enproindustries.in: white header with the logo, brand red #d00000, charcoal #303030, Gotham (Montserrat as the free stand-in).
+   Layout: charcoal module rail on the left, one working screen on the right; the rail collapses to a picker on phones. */
+:root {
+  --bg: #f3f3f3; --surface: #ffffff; --sunk: #ececec; --line: #d9d9d9;
+  --ink: #272727; --muted: #5f6164; --accent: #d00000; --accent-ink: #ffffff; --accent-soft: #fbe5e5;
+  --rail: #303030; --rail-ink: #e6e6e6; --rail-muted: #9a9c9e; --rail-hover: #3d3d3d;
+  --warn: #8a5300; --warn-soft: #fbefd9; --bad: #a3000b; --bad-soft: #f9e0e0; --good: #1f6b3a; --good-soft: #e0f0e5; --info: #2b5a8a; --info-soft: #e3edf7;
+  --f-body: "Montserrat", "Gotham", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "Roboto Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 3px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #161616; --surface: #202020; --sunk: #2a2a2a; --line: #3a3a3a;
+  --ink: #ececec; --muted: #a7a9ab; --accent: #ff4d4d; --accent-ink: #1a0000; --accent-soft: #3a1414;
+  --rail: #111111; --rail-ink: #e6e6e6; --rail-muted: #8d8f91; --rail-hover: #262626;
+  --warn: #e9b867; --warn-soft: #382a12; --bad: #ff8a85; --bad-soft: #3d1a1a; --good: #7fd19a; --good-soft: #15301f; --info: #8fbcea; --info-soft: #18293b; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #161616; --surface: #202020; --sunk: #2a2a2a; --line: #3a3a3a;
+  --ink: #ececec; --muted: #a7a9ab; --accent: #ff4d4d; --accent-ink: #1a0000; --accent-soft: #3a1414;
+  --rail: #111111; --rail-ink: #e6e6e6; --rail-muted: #8d8f91; --rail-hover: #262626;
+  --warn: #e9b867; --warn-soft: #382a12; --bad: #ff8a85; --bad-soft: #3d1a1a; --good: #7fd19a; --good-soft: #15301f; --info: #8fbcea; --info-soft: #18293b; color-scheme: dark }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.55 var(--f-body); }
+a { color: var(--accent) }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+/* header: white in both themes, as on enproindustries.in, so the logo keeps its colours */
+.hdr { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; align-items: center; gap: 14px; padding: 10px clamp(16px, 2.5vw, 28px); background: #fff; color: #272727; border-bottom: 3px solid #d00000 }
+.hdr img { height: 34px; width: auto; display: block }
+.hdr .app-name { font-weight: 600; font-size: 15px; padding-left: 14px; border-left: 1px solid #d9d9d9; letter-spacing: .01em }
+.hdr .app-name small { display: block; font-weight: 500; font-size: 11px; color: #6b6d70; text-transform: uppercase; letter-spacing: .12em }
+.hdr .spacer { flex: 1 }
+.hdr .draft { font: 600 11px var(--f-body); text-transform: uppercase; letter-spacing: .1em; color: #8a5300; background: #fbefd9; padding: 4px 8px; border-radius: var(--r) }
+.app { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: calc(100vh - 58px) }
+.rail { background: var(--rail); color: var(--rail-ink); padding: 14px 0 28px; position: sticky; top: 58px; height: calc(100vh - 58px); overflow-y: auto }
+.rail h4 { margin: 18px 18px 6px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; color: var(--rail-muted) }
+.rail a { display: block; padding: 6px 18px; color: var(--rail-ink); text-decoration: none; font-size: 13px; border-left: 3px solid transparent }
+.rail a:hover { background: var(--rail-hover) }
+.rail a[aria-current="page"] { border-left-color: #d00000; background: var(--rail-hover); color: #fff; font-weight: 600 }
+.picker { display: none }
+main { padding-block: 22px 56px; padding-inline: clamp(16px, 3vw, 36px); min-width: 0 }
+.topbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: flex-end; margin-bottom: 8px }
+.toggles { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted) }
+.toggles label { display: flex; gap: 6px; align-items: center }
+h1 { font-size: 22px; font-weight: 700; margin: 0 0 14px; text-wrap: balance; letter-spacing: -.005em }
+h1::after { content: ""; display: block; width: 40px; height: 3px; background: var(--accent); margin-top: 8px }
+h2 { font-size: 13px; font-weight: 700; margin: 0 0 10px; text-transform: uppercase; letter-spacing: .08em }
+h3 { font-size: 14px; margin: 14px 0 6px }
+.lede { color: var(--muted); margin: 0 0 18px; max-width: 75ch }
+.crumb { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)) }
+.cols { display: grid; gap: 18px; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start }
+.cols.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; min-width: 0 }
+.panel + .panel, .tbl + .panel { margin-top: 0 }
+.stack { display: grid; gap: 14px }
+.chip { display: inline-block; font: 600 10.5px/1.7 var(--f-body); letter-spacing: .03em; padding: 0 7px; border-radius: 2px; background: var(--sunk); color: var(--muted); white-space: nowrap; vertical-align: middle }
+.chip.tbc { background: var(--warn-soft); color: var(--warn); border: none; margin: 0; appearance: none; cursor: pointer; position: relative; font-family: var(--f-body) }
+.chip.tbc.open::after { content: attr(data-q); position: absolute; left: 0; top: 100%; margin-top: 4px; z-index: 20; width: max-content; max-width: 280px; white-space: normal; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r); padding: 6px 8px; font: 500 11px/1.4 var(--f-body); text-transform: none; letter-spacing: normal; box-shadow: 0 4px 10px rgba(0,0,0,.18) }
+.chip.rec { background: var(--info-soft); color: var(--info); white-space: normal }
+.chip.src { background: transparent; border: 1px solid var(--line); color: var(--muted) }
+.chip.bad { background: var(--bad-soft); color: var(--bad) }
+.chip.good { background: var(--good-soft); color: var(--good) }
+.chip.warn { background: var(--warn-soft); color: var(--warn) }
+.chip.info { background: var(--info-soft); color: var(--info) }
+.mono { font-family: var(--f-mono); font-size: 12.5px }
+abbr.term { text-decoration: underline dotted 1.5px; text-underline-offset: 2px; cursor: help; font: inherit }
+.muted { color: var(--muted) }
+/* forms */
+.field { display: grid; gap: 5px; padding-block: 10px; border-bottom: 1px solid var(--sunk) }
+.field:last-child { border-bottom: 0 }
+.field > .lbl { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-weight: 600; font-size: 13px }
+.req { color: var(--accent) }
+.ctl { width: 100%; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 8px 10px }
+.ctl:focus { border-color: var(--accent) }
+.ctl[readonly] { background: var(--sunk); color: var(--muted) }
+textarea.ctl { min-height: 70px; resize: vertical }
+.photo { border: 1px dashed var(--muted); border-radius: var(--r); padding: 20px; text-align: center; color: var(--muted); background: var(--sunk); font-size: 13px }
+.hint { font-size: 12px; color: var(--muted) }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px }
+.btn { font: 600 13px var(--f-body); border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 16px; cursor: pointer; text-decoration: none; display: inline-block; transition: background-color 150ms, border-color 150ms }
+.btn:hover { background: var(--sunk) }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink) }
+.btn.primary:hover { filter: brightness(.92) }
+.btn.danger { color: var(--bad); border-color: transparent; background: transparent; margin-left: auto }
+.btn.danger:hover { background: var(--bad-soft) }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--r); padding: 2px; gap: 2px; background: var(--surface) }
+.seg button { font: 600 12px var(--f-body); border: 0; border-radius: 2px; padding: 6px 12px; background: transparent; color: var(--muted); cursor: pointer; transition: background-color 150ms, color 150ms }
+.seg button:hover { color: var(--ink) }
+.seg button[aria-pressed="true"] { background: var(--rail); color: #fff }
+.bar-row { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 14px }
+.bar-row .lab { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted) }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); max-width: min(520px, calc(100% - 32px)); background: var(--rail); color: #fff; padding: 10px 16px; border-radius: var(--r); font-size: 13px; border-left: 3px solid #d00000 }
+body.clean .chip.tbc { display: none }
+.big { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)) }
+.big a { display: block; padding: 24px 18px; font-size: 17px; font-weight: 700; text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: var(--r) }
+.big a:hover { background: var(--accent-soft) }
+.big a span { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 4px }
+/* tables */
+.tbl { overflow-x: auto }
+table { border-collapse: collapse; width: 100%; font-size: 13px }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top }
+th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; background: var(--sunk) }
+tbody tr:hover { background: var(--bg) }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums }
+/* tiles */
+.tile { border-top: 3px solid var(--rail) }
+.tile .n { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums }
+.tile .k { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted) }
+/* stages, lifecycle, history */
+.steps { display: flex; flex-wrap: wrap; gap: 6px; align-items: stretch }
+.step { flex: 1 1 140px; border: 1px solid var(--line); border-radius: var(--r); padding: 9px 10px; background: var(--surface); position: relative }
+.step b { display: block; font-size: 12.5px }
+.step .who { display: block; font-size: 11.5px; color: var(--muted) }
+.step.on { border-color: var(--accent); box-shadow: inset 0 3px 0 var(--accent) }
+.step.done { background: var(--sunk); color: var(--muted) }
+.step.done b::before { content: "✓ "; color: var(--good) }
+.step.off { border-style: dashed; color: var(--muted) }
+.branch { margin-top: 8px; font-size: 12px; color: var(--muted) }
+.hist { list-style: none; margin: 0; padding: 0 }
+.hist li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--sunk); font-size: 13px }
+.hist li:last-child { border-bottom: 0 }
+.hist time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px }
+.rec-head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; margin-bottom: 14px }
+.rec-head .id { font: 600 13px var(--f-mono); color: var(--muted) }
+.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; font-size: 13px; margin: 0 }
+.kv dt { color: var(--muted) }
+.kv dd { margin: 0; font-weight: 500 }
+/* bars: horizontal, values to scale */
+.bars { display: grid; gap: 7px }
+.bars .b { display: grid; grid-template-columns: minmax(80px, 30%) minmax(0, 1fr) 54px; gap: 10px; align-items: center; font-size: 12.5px }
+.bars .track { background: var(--sunk); height: 12px; border-radius: 2px; overflow: hidden }
+.bars .fill { height: 100%; background: var(--accent) }
+.bars .fill.alt { background: var(--rail) }
+.bars .v { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600 }
+/* empty, loading, error */
+.state { text-align: center; padding: 36px 16px; color: var(--muted) }
+.state b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px }
+.state.err { color: var(--bad) }
+.skel { display: grid; gap: 10px }
+.skel i { display: block; height: 14px; border-radius: 2px; background: linear-gradient(90deg, var(--sunk), var(--line), var(--sunk)); background-size: 200% 100%; animation: sk 1.4s infinite }
+@keyframes sk { to { background-position: -200% 0 } }
+.ai { border: 1px solid var(--info); border-left-width: 4px; border-radius: var(--r); padding: 12px; background: var(--info-soft) }
+.board { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)) }
+.board .panel { min-height: 110px; border-top: 3px solid var(--rail) }
+.board .panel b { display: block; font-size: 12.5px; margin: 4px 0 }
+.foot { margin-top: 28px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12px; color: var(--muted) }
+.status-list { display: grid; gap: 0 }
+.status-list a, .status-list div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none }
+.status-list a:hover b { color: var(--accent) }
+/* Enpro OS additions: priority numbers, the WBS tree, the Gantt strip, greyed "coming soon" items (S15-68), a phone frame */
+.epn { display: inline-block; min-width: 34px; text-align: center; font: 700 12.5px var(--f-mono); padding: 1px 6px; border-radius: 2px; background: var(--sunk); color: var(--ink) }
+.epn.ovr { background: #f6b26b; color: #3a1f00 }
+.epn.ovr::after { content: " override"; font: 600 10px var(--f-body) }
+.wbs td:nth-child(2) { font-family: var(--f-mono); font-size: 12px; white-space: nowrap }
+.wbs .lv { display: inline-block; width: 22px; color: var(--muted); font: 600 10.5px var(--f-mono) }
+/* sign-in, account menu, onboarding tour */
+body.signed-out .app { grid-template-columns: minmax(0, 1fr) }
+body.signed-out .rail, body.signed-out .picker, body.signed-out .topbar, body.signed-out .account { display: none }
+body.signed-out main { max-width: 640px; margin-inline: auto }
+.signin h1::after { display: none }
+.signin .big { margin-top: 18px }
+.signin .big a span { margin-top: 6px }
+.account { position: relative; margin-left: 4px }
+.acct-btn { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); padding: 5px 12px; cursor: pointer; font: inherit; text-align: right }
+.acct-btn:hover { background: var(--sunk) }
+.acct-role { font: 700 12.5px var(--f-body); color: var(--ink) }
+.acct-who { font-size: 10.5px; color: var(--muted) }
+.acct-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; width: max-content; min-width: 220px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: 0 10px 28px rgba(0,0,0,.16); padding: 6px }
+.acct-menu-label { font: 600 10px var(--f-body); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 7px 10px 4px }
+.acct-opt { display: block; width: 100%; text-align: left; font: 500 13px var(--f-body); border: 0; background: none; color: var(--ink); padding: 7px 10px; border-radius: 2px; cursor: pointer }
+.acct-opt:hover { background: var(--sunk) }
+.acct-opt[aria-current="true"] { font-weight: 700; color: var(--accent) }
+.acct-menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0 }
+#tour:empty { display: none }
+#tour { position: fixed; inset: 0; z-index: 50; background: rgba(20, 16, 14, .5); display: flex; align-items: center; justify-content: center; padding: 20px }
+.tour-card { background: var(--surface); border-radius: var(--r); padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,.35) }
+.tour-progress { font: 600 11px var(--f-body); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 10px }
+.tour-card h2 { font-size: 18px; text-transform: none; letter-spacing: 0; margin: 0 0 8px }
+.tour-card p { color: var(--muted); font-size: 13.5px; margin: 0 0 22px }
+.tour-actions { display: flex; align-items: center; gap: 8px }
+.tour-actions .tour-fwd { margin-left: auto; display: flex; gap: 8px }
+.gantt { display: grid; gap: 4px }
+.gantt .g { display: grid; grid-template-columns: minmax(150px, 34%) minmax(0, 1fr); gap: 10px; align-items: center; font-size: 12.5px }
+.gantt .lane { position: relative; height: 22px; background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), var(--line) calc(25% - 1px) 25%); border-radius: 2px }
+.gantt .bar { position: absolute; height: 7px; border-radius: 2px }
+.gantt .bar.pl { top: 1px; border: 1.5px solid var(--rail); background: transparent }
+.gantt .bar.ac { top: 8px; background: var(--rail) }
+.gantt .bar.fc { top: 14px; background: repeating-linear-gradient(45deg, var(--accent) 0 3px, transparent 3px 6px); border: 1px solid var(--accent) }
+.gantt .bar.bl { top: 1px; height: 20px; border: 1px dashed var(--muted); background: transparent }
+.gantt .bar.ms { width: 10px !important; height: 10px; top: 6px; transform: rotate(45deg); background: var(--accent); border-radius: 0 }
+.gantt .scale { display: grid; grid-template-columns: repeat(4, 1fr); font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+.gantt .today { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--info) }
+.soon { opacity: .55 }
+.soon::after { content: "coming soon"; margin-left: 8px; font: 600 10px var(--f-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+.phone { max-width: 380px; border: 8px solid var(--rail); border-radius: 22px; padding: 12px; background: var(--surface) }
+@media (max-width: 820px) {
+  .app { grid-template-columns: minmax(0, 1fr) }
+  .rail { display: none }
+  .picker { display: block; margin-bottom: 14px }
+  .cols, .cols.even { grid-template-columns: minmax(0, 1fr) }
+  .hdr { flex-wrap: wrap; row-gap: 6px }
+  .hdr .app-name small { display: none }
+  .hdr .draft { font-size: 9.5px; padding: 3px 6px; white-space: normal }
+  .acct-btn { align-items: flex-start; text-align: left }
+  .tour-card { padding: 18px }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }
+</style>
+
+<header class="hdr">
+  <img alt="Enpro" src="data:image/png;base64,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">
+  <div class="app-name">Enpro OS<small>Projects and operations</small></div>
+  <span class="spacer"></span>
+  <span class="draft">Draft for discussion · sample data</span>
+  <div class="account" id="account"></div>
+</header>
+<div class="app">
+  <nav class="rail" id="rail" aria-label="Screens"></nav>
+  <main>
+    <select class="picker ctl" id="picker" aria-label="Go to screen"></select>
+    <div class="topbar">
+      <div class="toggles">
+        <label><input type="checkbox" id="allNavToggle"> Show full navigation</label>
+        <label><input type="checkbox" id="mapToggle"> Show field mapping</label>
+        <label><input type="checkbox" id="cleanToggle"> Hide open questions</label>
+      </div>
+    </div>
+    <div id="view"></div>
+  </main>
+</div>
+<div id="tour"></div>
+
+<script>
+/* Core helpers, copied from docs/specs/common-functions/wireframes.html so the two read as one family.
+   Module screens live in wireframes/*.js and call add(...).
+   DRAFT: drawn on 14 Oct 2026 from the Enpro OS specs (docs/specs/enpro-os/) and docs/architecture/03-enpro-os.md.
+   No screen here has been reviewed or approved by Enpro.
+   Evidence labels follow docs/requirements/evidence/README.md:
+   - a screen's unchipped content carries the label in its footer, with the sources it was drawn from
+     (Enpro OS rows are not yet keyed to R3 rows, so the footer cites plan v2.0, R3 and the reference reviews RR-01 to RR-11);
+   - tbc(q) marks UNKNOWN or OPEN DECISION, conflict(q) marks two sources disagreeing, rec(t) marks RECOMMENDATION;
+   - every tbc() and conflict() question is collected on the Open items screen.
+   Sample data only: project numbers, customers and suppliers are invented; people appear as roles, never names.
+   Sign-in (14 Oct 2026 addition): a role picker stands in for real auth, so the draft can show the access model
+   the architecture describes (03-enpro-os §2, "the two audiences") rather than assert it in prose alone. The role
+   picked, and whether the one-time tour has run, persist in this browser's localStorage only — nothing is sent
+   anywhere, and clearing site data resets both. */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function loadJSON(key, dflt) { try { const v = JSON.parse(localStorage.getItem(key)); return v === null ? dflt : v; } catch (e) { return dflt; } }
+function saveJSON(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+// mutate(key, fn, dflt): reads the stored list (or dflt, the screen's own hardcoded sample), applies fn, saves it,
+// and returns the new value so the caller's render picks it up. This is what makes a button a real action against
+// the sample data instead of a toast: "Raise punch point" pushes a row here, "Accept" flips a row's own state here.
+// Scoped to this browser only (localStorage) — nothing is sent anywhere, and clearing site data resets it.
+function mutate(key, fn, dflt) { const v = fn(loadJSON(key, dflt)); saveJSON(key, v); return v; }
+
+// GLOSSARY: every short form used across the draft, each with its source. Confirmed meanings cite where they're
+// defined (doc 17.06, 03-enpro-os.md, product-spec, tech-spec); an inferred or unconfirmed one says so rather than
+// asserting it — same rule as tbc()/conflict() elsewhere on this page (docs/requirements/evidence/README.md).
+const GLOSSARY = {
+  'EPN': ['Engineering Priority Number', 'Ranks engineering and supply-chain tasks for one project — lower number is more urgent. One per project, from the earliest manufacturing start of any system tag; ties go to the earlier initiation. Recalculated on every change, not daily (CONFIRMED, doc 17.06).'],
+  'MPN': ['Manufacturing Priority Number', 'Ranks production and quality tasks for one system tag the same way EPN ranks a project — lower is more urgent, recalculated instantly (CONFIRMED, doc 17.06).'],
+  'GPN': ['Global Priority Number', 'Shown in the Despatch Plan. Whether it is the same number as EPN/MPN, a derived number, or being retired is OPEN DECISION — stored as a manual field until settled.'],
+  'WBS': ['Work Breakdown Structure', 'Enpro’s six-level project code grammar: [P|S|E]-YYNNNN-FG-&lt;tag&gt;-&lt;SF|BO|DM|FI&gt;-&lt;item&gt;-&lt;NN&gt; (SOURCE-DERIVED, RR-01, RR-02).'],
+  'SO': ['Sales Order', 'The SAP record created when an order is won; it triggers Marketing’s project-creation workflow.'],
+  'BO': ['Bought Out', 'A WBS item sourced from a supplier rather than fabricated in Enpro’s own shop (WBS grammar L4).'],
+  'SF': ['Shop Fabricated', 'A WBS item built in Enpro’s own shop (WBS grammar L4).'],
+  'DM': ['Direct Material', 'A WBS item issued directly from stock rather than bought to order or shop-fabricated (WBS grammar L4).'],
+  'FI': ['Finance-linked item', 'A WBS grammar L4 code; exact scope beyond the grammar itself is UNKNOWN in this pass.'],
+  'FG': ['Finished Goods', 'The WBS level directly under the project — the physical skid or unit being built (WBS grammar L2).'],
+  'AVL': ['Approved Vendor List', 'Enpro’s pre-qualified supplier list that an RFQ is sent against.'],
+  'RFQ': ['Request For Quote', 'Sent to AVL suppliers once a bought-out item’s datasheet and ITP are released and its kit check passes.'],
+  'PO': ['Purchase Order', 'Raised in SAP once a supplier is selected; read back into Enpro OS, never written by it.'],
+  'OA': ['Order Acknowledgement', 'The supplier’s confirmation of a PO (INFERENCE — the term is used but not spelled out in the source documents).'],
+  'TL': ['Team Leader', 'First sign-off level in both the Marketing WBS review and the supply-chain comparison sign-off chain.'],
+  'SM': ['Senior Manager', 'Second sign-off level on a techno-commercial comparison, after the Team Leader.'],
+  'GM': ['General Manager', 'Final sign-off level on a techno-commercial comparison.'],
+  'HOD': ['Head of Department', 'Can set a priority-number override (orange EPN/MPN) and sits in the plan-change and issue approval chain.'],
+  'PE': ['Project Engineer', 'Owns a project day to day; acknowledges customer changes and tracks SLPD escalation (distinct from “Process”, the engineering discipline shown in WBS owner columns).'],
+  'KOM': ['Kick-Off Meeting', 'Closes Marketing’s hand-off workflow alongside Release WBS — both complete only once every parallel branch is done.'],
+  'Kit': ['Material/document completeness check', 'Kit 1 covers 16 material groups and 11 documents, reviewed 15 days before the LOS (product template) start date; Kit 2 and 3 are UNKNOWN beyond being named (product-spec §4.7).'],
+  'LOS': ['Lube Oil System', 'One of Enpro’s SED product templates (the sample project P-260114 in this draft).'],
+  'SLPD': ['A Zmaster/SAP field tracked after PO', 'Monitored on the Post-order screen with escalation to TL, HOD and PE when at risk. Its full form and the exact field/change-detection rule are UNKNOWN (tech-spec §6).'],
+  'ITP': ['Inspection and Test Plan', 'Carries H/W/R/A stage codes plus a COC; cascades from a product ITP to each component.'],
+  'H / W / R / A': ['ITP stage codes', 'H Hold, W Witness, R Review — by industry convention (INFERENCE, not spelled out by Enpro). What A means is an open question (QA-2).'],
+  'COC': ['Certificate of Conformance', 'Standard industry term carried alongside the H/W/R/A codes; not separately defined in the source documents (INFERENCE).'],
+  'TPI': ['Third-Party Inspector', 'Offers only go out after internal release; call notice timing (14+3 days vs 15 days) is an open question.'],
+  'MDR': ['Manufacturing/Material Data Record', 'Assembled automatically from MTCs, test reports, released drawings, certificates and punch closures; immutable once issued.'],
+  'MTC': ['Material Test Certificate', 'A supplier-supplied material certificate that feeds the MDR.'],
+  'NCR': ['Non-Conformance Report', 'Raised in SAP when inward-inspected material is rejected.'],
+  'NC': ['Non-Conformance', 'The Common Functions / BEX register this overlaps with; also raised directly from a Quality punch point.'],
+  'COPQ': ['Cost of Poor Quality', 'The cost roll-up that a closed punch point and an internal Issue both feed.'],
+  'GRN': ['Goods Receipt Note', 'Read from SAP at Stores inward acceptance — Enpro OS never writes it back.'],
+  'QM': ['Quality Management (SAP module)', 'Source of the usage-decision notification Stores reads after an inward rejection.'],
+  'TECO': ['Technically Complete', 'The SAP status set the day after dispatch, opening the Closure sequence.'],
+  'LLM': ['Lessons-Learnt Meeting', 'Internal, 7 days after dispatch; customer-facing, 2 weeks after dispatch.'],
+  'IRN': ['Invoice Reference Number', 'Generated as part of Closure, alongside the credit note.'],
+  'LD': ['Liquidated Damages', 'Analysed at Closure before the project can close.'],
+  'DCR': ['Deviation/Change Control Record', 'Numbered &lt;WO&gt;-DCR-&lt;seq&gt;-&lt;yyyymmdd&gt;, with a 32-line checklist, inside the Change and issue management workflow.'],
+  'CFT': ['Cross-Functional Team', 'Meets, with minutes (MOM), to assess a logged customer change before approval.'],
+  'MOM': ['Minutes Of Meeting', 'Recorded for a CFT change-review meeting and for a customer-service site-visit closure.'],
+  'DoA': ['Delegation of Authority', 'The approval-value matrix the Phase 2 commercial-proposal engine needs; none exists at Enpro today (S05-24).'],
+  'BEX': ['Business Excellence', 'The Common Functions module for certifications, non-conformance and continuous improvement — a separate product sharing the same platform.'],
+  'MIS': ['Management Information System / report', 'One of the named sources (Project MIS, Engg KPI, COPQ) management’s home-screen KPIs could be drawn from — which one is still open.'],
+  'CRS': ['Customer Resolution Sheet', 'Logs every conflict AI finds between a customer’s own documents, each with its two source citations, for a marketing engineer to accept or reject.'],
+  'AI': ['Artificial-intelligence drafting assist', 'Always produces a draft a named person must review and release — never an autonomous decision (product-spec §8).'],
+  'ZWPS / ZQA32 / Zmaster': ['Enpro’s existing SAP Z-programs', 'ZWPS uploads the WBS files Enpro OS generates; ZQA32 and Zmaster are inward-QC and Kit-OK data sources Enpro OS reads from — how (RFC, CDS view or OData) is OPEN DECISION O-ZREP.'],
+  'BTP / CPI': ['SAP Business Technology Platform / Cloud Platform Integration', 'The integration layer Enpro OS’s SAP connectors are built on (ADR-0008).'],
+  'CC-YY####': ['Complaint number format', 'Customer-service complaint numbering, reset each financial year from 1 April.']
+};
+// term(code): wraps a short form in a native <abbr title> tooltip and underlines it, so hovering (or a screen
+// reader) gives the full meaning without leaving the screen. Falls back to plain text for a code not in GLOSSARY,
+// so a typo here never breaks a screen. See also the Legend screen, which lists every entry in one place.
+const term = code => { const e = GLOSSARY[code]; return e ? `<abbr class="term" title="${esc(e[0] + ' — ' + e[1].replace(/<[^>]+>/g, ''))}">${esc(code)}</abbr>` : esc(code); };
+// Roles stand in for real sign-in; "who" matches the sample identity already used on the Home screen.
+const ROLES = {
+  eng: { label: 'Design engineer', who: 'Process engineer · EIPL · SED · MKL Phase-I' },
+  buyer: { label: 'Buyer', who: 'Buyer, purchasing group P12 · EIPL · SED' },
+  pe: { label: 'Project engineer', who: 'Project engineer · EIPL · SED · 6 projects' },
+  qc: { label: 'QC engineer', who: 'Project QC engineer · EIPL · SED · MKL Phase-I' },
+  mgmt: { label: 'Management', who: 'Director · EIPL · all divisions' }
+};
+// Screens each role's rail shows by default (RECOMMENDATION: a reading of 03-enpro-os §2's "two audiences" split,
+// not something Enpro has reviewed). The Overview module (ALWAYS_NAV) stays the same for everyone.
+const ROLE_SCREENS = {
+  eng: ['eng-task', 'sub-mdl', 'prj-wbs'],
+  buyer: ['scm-indents', 'scm-compare', 'str-inward'],
+  pe: ['prj-list', 'prj-new', 'prj-wbs', 'prj-gantt', 'prj-closure', 'mkt-proposal', 'sub-mdl'],
+  qc: ['qa-inspect', 'str-inward'],
+  mgmt: ['prj-gantt', 'prj-closure']
+};
+// The five lifecycle-map stages the original 8-module draft named but did not draw (crm-enquiry, prd-floor,
+// chg-log, cs-complaint) stay in ALWAYS_NAV rather than any one role's list: each is a thin, map-completeness
+// screen rather than a deep role workflow, so every role can reach the whole lifecycle map without the
+// "Show full navigation" override.
+const ALWAYS_NAV = ['home', 'lifecycle', 'legend', 'open', 'mapping', 'crm-enquiry', 'prd-floor', 'chg-log', 'cs-complaint'];
+let ROLE = loadJSON('enpro-os-wf-role', null);
+let TOURED = loadJSON('enpro-os-wf-toured', false);
+let ASKED = null; // collects every tbc() question while questions() renders a screen
+const tbc = (q, lab = 'UNKNOWN') => { if (ASKED) ASKED.add(q); return `<button type="button" class="chip tbc" data-q="${esc(q)}" aria-label="${esc(lab)}: to confirm. ${esc(q)}" onclick="this.classList.toggle('open')">${lab}: to confirm</button>`; };
+const conflict = q => tbc(q, 'OPEN DECISION · sources differ');
+const rec = t => `<span class="chip rec">RECOMMENDATION${t ? ': ' + esc(t) : ''}</span>`;
+const fmt = (code, file = '') => `<span class="chip src" title="${esc(file || 'docs/requirements/evidence/reference-reviews')}">Enpro ${esc(code)}</span>`; // cites a review of Enpro's SED reference set (RR-01 to RR-11)
+const epn = (n, ovr = false) => `<span class="epn${ovr ? ' ovr' : ''}">${n}</span>`; // EPN or MPN (doc 17.06); orange with the word "override" when set by hand
+const ev = r => `<span class="chip src" title="docs/requirements/evidence: ${r.startsWith('S05') ? 'S05, 14 Aug call' : 'S15, 8 and 9 Oct sessions'}">${esc(r)}</span>`; // cites a row of an evidence extract (S05-n, S15-n)
+const status = (text, tone = '') => `<span class="chip ${tone}">${esc(text)}</span>`; // tone: good, bad, warn, info or ''
+const go = id => `#${id}`;
+const code = t => `<span class="mono">${esc(t)}</span>`; // record numbers and form codes
+
+// field(label, type, required, source, extra): source is the field-mapping column.
+// extra: options, value, r3 (R3 row), fmt (Enpro format code), tbc, tbcLabel, recommend
+const F = (label, type, req, source, x = {}) => ({ label, type, req, source, ...x });
+const FORMS = {};
+const FORM_SCREENS = {}; // form key -> screen id, set by each module file
+
+const mapTable = key => `<div class="tbl"><table><thead><tr><th>Field</th><th>Type</th><th>Req.</th><th>Source (field mapping)</th><th>Evidence</th><th>Enpro reference</th><th>Status</th></tr></thead><tbody>${
+  FORMS[key].map(f => `<tr><td>${esc(f.label)}</td><td class="mono">${f.type}</td><td>${f.req === true ? 'Yes' : f.req === '?' ? '?' : 'No'}</td><td>${esc(f.source)}</td><td class="mono">${esc(f.r3 || '')}</td><td class="mono">${esc(f.fmt || '')}</td><td>${f.tbc ? tbc(f.tbc, f.tbcLabel) : ''} ${f.recommend ? rec('proposed field') : ''}</td></tr>`).join('')
+}</tbody></table></div>`;
+
+function renderForm(key) {
+  const fields = FORMS[key];
+  if (document.getElementById('mapToggle').checked) return mapTable(key);
+  return fields.map((f, i) => {
+    const fid = `${key}-${i}`;
+    let ctl;
+    if (f.type === 'photo') ctl = `<div class="photo">Tap to take a photo or choose from gallery</div>`;
+    else if (f.type === 'select') ctl = `<select class="ctl" id="${fid}">${f.options.map(o => `<option>${esc(o)}</option>`).join('')}</select>`;
+    else if (f.type === 'textarea') ctl = `<textarea class="ctl" id="${fid}"></textarea>`;
+    else if (f.type === 'auto') ctl = `<input class="ctl" id="${fid}" readonly value="${esc(f.value)}">`;
+    else if (f.type === 'date') ctl = `<input class="ctl" id="${fid}" type="date">`;
+    else if (f.type === 'yesno') ctl = `<select class="ctl" id="${fid}"><option>Yes</option><option>No</option><option>Not applicable</option></select>`;
+    else ctl = `<input class="ctl" id="${fid}" type="${f.type === 'number' ? 'number' : 'text'}">`;
+    const tag = f.type === 'photo' ? 'div' : 'label';
+    return `<div class="field"><${tag} class="lbl"${tag === 'label' ? ` for="${fid}"` : ''}>${esc(f.label)}${f.req === true ? '<span class="req">*</span>' : ''} ${f.fmt ? fmt(f.fmt) : ''} ${f.tbc ? tbc(f.tbc, f.tbcLabel) : ''} ${f.recommend ? rec('proposed, ' + f.recommend) : ''}</${tag}>${ctl}<span class="hint">${esc(f.source)}</span></div>`;
+  }).join('');
+}
+const formScreen = (key, submit, side, doAttr = '') => `<div class="cols"><div class="panel">${renderForm(key)}<div class="btns"><button class="btn primary" type="button"${doAttr ? ` data-do="${esc(doAttr)}"` : ''}>${submit}</button><button class="btn" type="button">Save draft</button></div></div><div class="stack">${side}</div></div>`;
+
+// tables, tiles, groups
+// A header exactly matching a GLOSSARY key gets its hover tooltip for free; every other header renders as before.
+// Every row carries data-searchable, so any screen that adds one <input data-search> gets a real live filter
+// over every table on it for free (wired once in render(), see wireSearch()).
+const table = (head, rows) => `<div class="tbl"><table><thead><tr>${head.map(h => { const t = h.replace(/#$/, ''); return `<th${h.endsWith('#') ? ' class="num"' : ''}>${GLOSSARY[t] ? term(t) : esc(t)}</th>`; }).join('')}</tr></thead><tbody>${rows.map(r => `<tr data-searchable>${r.map((c, i) => `<td${head[i].endsWith('#') ? ' class="num"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+const tile = (k, n, note = '') => `<div class="panel tile"><div class="k">${k}</div><div class="n">${n}</div><div class="hint">${note}</div></div>`;
+const groups = (mod, rows) => `<div class="panel status-list">${rows.map(([g, name, r3, state, link]) => {
+  const chip = state === 'wire' ? '<span class="chip good">wireframe</span>' : state === 'tbd' ? '<span class="chip tbc">to be decided</span>' : '<span class="chip">outline</span>';
+  const inner = `<span><b>${g} · ${esc(name)}</b><br><span class="hint mono">${r3}</span></span>${chip}`;
+  return link ? `<a href="${go(link)}">${inner}</a>` : `<div>${inner}</div>`;
+}).join('')}</div>`;
+const kv = pairs => `<dl class="kv">${pairs.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+
+// stages: steps([[name, hint], ...], current). lifecycle([{name, who, sla}], current, branch) adds the role and SLA per stage
+// and an optional line for the side exits (returned, rejected, escalated).
+const steps = (list, on) => `<div class="steps">${list.map((s, i) => `<div class="step ${i < on ? 'done' : i === on ? 'on' : ''}"><b>${s[0]}</b><span class="hint">${s[1]}</span></div>`).join('')}</div>`;
+const lifecycle = (stages, on, branch = '') => `<div class="steps">${stages.map((s, i) => `<div class="step ${i < on ? 'done' : i === on ? 'on' : ''}"><b>${s.name}</b>${s.who ? `<span class="who">${s.who}</span>` : ''}${s.sla ? `<span class="hint">${s.sla}</span>` : ''}</div>`).join('')}</div>${branch ? `<div class="branch">${branch}</div>` : ''}`;
+// history([[when, who, what], ...]): the record's audit trail, newest first
+const history = rows => `<ul class="hist">${rows.map(([w, who, what]) => `<li><time>${w}</time><span><b>${who}</b> · ${what}</span></li>`).join('')}</ul>`;
+// recordHead(id, title, [statusText, tone], actionsHtml)
+const recordHead = (rid, title, st, acts = '') => `<div class="rec-head"><div><span class="id">${esc(rid)}</span> ${st ? status(st[0], st[1]) : ''}<div style="font-weight:700;font-size:16px">${title}</div></div><div class="btns" style="margin:0">${acts}</div></div>`;
+const btn = (label, kind = '') => `<button class="btn ${kind}" type="button">${label}</button>`;
+
+// switchers: pick(key, default) reads the current value; switcher(key, label, options) draws the control.
+// Used for role views (who is looking), data states (data, empty, loading, error) and tabs.
+const SW = {};
+const pick = (key, dflt) => SW[key] ?? dflt;
+const switcher = (key, label, options, dflt) => { const cur = pick(key, dflt ?? Object.keys(options)[0]);
+  return `<div class="bar-row"><span class="lab">${label}</span><div class="seg" role="group" aria-label="${esc(label)}">${Object.entries(options).map(([k, v]) => `<button type="button" data-sw="${key}" data-val="${k}" aria-pressed="${k === cur}">${v}</button>`).join('')}</div></div>`; };
+// states(key, dataFn, empty, error): one block with a Data / Empty / Loading / Error switch above it.
+// empty = [heading, line, actionLabel]; error = specific message with the next step.
+const states = (key, dataFn, empty, error) => {
+  const st = pick(key, 'data');
+  const body = st === 'empty' ? `<div class="state"><b>${empty[0]}</b>${empty[1]}${empty[2] ? `<div class="btns" style="justify-content:center">${btn(empty[2], 'primary')}</div>` : ''}</div>`
+    : st === 'loading' ? `<div class="skel" aria-busy="true"><i></i><i style="width:80%"></i><i style="width:90%"></i><i style="width:60%"></i></div>`
+    : st === 'error' ? `<div class="state err"><b>Could not load</b>${error}<div class="btns" style="justify-content:center">${btn('Try again')}</div></div>` : dataFn();
+  return switcher(key, 'Show', { data: 'Data', empty: 'Empty', loading: 'Loading', error: 'Error' }) + body;
+};
+// bars([[label, value], ...], max, alt): horizontal bars drawn to one scale; value text shown at the end
+const bars = (rows, max, alt = false, unit = '') => { const m = max ?? Math.max(...rows.map(r => r[1]), 1);
+  return `<div class="bars">${rows.map(([l, v]) => `<div class="b"><span>${esc(l)}</span><span class="track"><span class="fill${alt ? ' alt' : ''}" style="width:${Math.max(0, Math.min(100, v / m * 100))}%;display:block"></span></span><span class="v">${v}${unit}</span></div>`).join('')}</div>`; };
+
+// ---- screens ----
+// add(id, nav, module, title, REQ IDs, sources the screen is drawn from, body, open questions, evidence label of the unchipped content)
+// For Enpro OS the sixth argument cites plan v2.0 (S10), R3 (S11), the reference reviews (RR-nn) or the 8 and 9 Oct sessions (S15),
+// because Enpro OS rows are not yet keyed to R3 rows (requirements inventory, header).
+const S = [];
+const add = (id, nav, mod, title, req, r3, body, open = [], src = '') => S.push({ id, nav, mod, title, req, r3, body, open, src });
+</script>
+<script src="wireframes/overview.js"></script>
+<script src="wireframes/projects.js"></script>
+<script src="wireframes/marketing.js"></script>
+<script src="wireframes/engineering.js"></script>
+<script src="wireframes/submittals.js"></script>
+<script src="wireframes/scm.js"></script>
+<script src="wireframes/stores.js"></script>
+<script src="wireframes/quality.js"></script>
+<script src="wireframes/production.js"></script>
+<script src="wireframes/changeissue.js"></script>
+<script src="wireframes/customerservice.js"></script>
+<script>
+add('legend', 'Legend & abbreviations', 'Overview', 'Legend: every short form used in this draft', 'Reference, not a requirement', '', () => {
+  const groups = {
+    'Priority & scheduling': ['EPN', 'MPN', 'GPN', 'SLPD', 'Kit', 'KOM', 'LOS'],
+    'WBS & structure codes': ['WBS', 'SO', 'BO', 'SF', 'DM', 'FI', 'FG'],
+    'Supply chain': ['AVL', 'RFQ', 'PO', 'OA', 'TL', 'SM', 'GM', 'HOD', 'ZWPS / ZQA32 / Zmaster'],
+    'Documents & submittals': ['CRS', 'MOM', 'CFT', 'DCR', 'DoA'],
+    'Quality & inspection': ['ITP', 'H / W / R / A', 'COC', 'TPI', 'MDR', 'MTC', 'NCR', 'NC', 'COPQ'],
+    'Finance & closure': ['TECO', 'LLM', 'IRN', 'LD'],
+    'Roles': ['PE', 'HOD', 'TL', 'SM', 'GM'],
+    'Other': ['BEX', 'MIS', 'AI', 'BTP / CPI', 'CC-YY####']
+  };
+  const rows = code => { const e = GLOSSARY[code]; return `<tr data-searchable><td class="mono">${esc(code)}</td><td><b>${esc(e[0])}</b></td><td>${e[1]}</td></tr>`; };
+  return `<p class="lede">Every short form used across this draft's 13 screens, in one place. Hover any underlined one on a screen for the same text; search filters this table only. A term's wording follows its own source, cited where the meaning is confirmed, inferred, or still open — never guessed past what Enpro has said.</p>
+    <div class="bar-row"><input class="ctl" style="max-width:340px" data-search placeholder="Search a term or its meaning" aria-label="Search glossary"></div>
+    ${Object.entries(groups).map(([g, codes]) => `<h2 style="margin-top:18px">${esc(g)}</h2><div class="tbl"><table><thead><tr><th>Term</th><th>Full form</th><th>Means</th></tr></thead><tbody>${codes.map(rows).join('')}</tbody></table></div>`).join('')}`;
+}, [], 'SOURCE-DERIVED');
+
+add('mapping', 'Field mapping', 'Overview', 'Field mapping, all forms', 'Specification baseline, 23 Oct', '', () => {
+  const total = Object.values(FORMS).reduce((n, f) => n + f.length, 0);
+  return `<p class="lede">${Object.keys(FORMS).length} forms, ${total} fields. Each row says where the value comes from, the source it was drawn from and the Enpro reference file it follows. Rows marked to confirm need an answer from Enpro before the module's specification is signed.</p>` +
+    Object.entries(FORM_SCREENS).map(([k, sid]) => {
+      const s = S.find(x => x.id === sid);
+      return `<div class="panel" style="margin-bottom:16px"><h2><a href="${go(sid)}">${esc(s.title)}</a> <span class="chip">${esc(s.mod)}</span></h2><p class="hint mono">${esc(s.req)}</p>${mapTable(k)}</div>`;
+    }).join('');
+});
+
+// Every question a screen asks: its open list plus each to-confirm chip it renders (form fields included).
+function questions(s) {
+  if (s.id === 'open' || s.id === 'mapping') return [];
+  ASKED = new Set(s.open);
+  try { s.body(); } finally { var q = [...ASKED]; ASKED = null; }
+  return q;
+}
+
+add('open', 'Open items', 'Overview', 'Open items across all screens', 'Collected from every screen', '', () => {
+  const all = S.map(s => [s, questions(s)]).filter(([, q]) => q.length);
+  const rows = all.map(([s, q]) => [`<a href="${go(s.id)}">${esc(s.title)}</a>`, esc(s.mod), q.map(esc).join('<br>')]);
+  const total = all.reduce((n, [, q]) => n + q.length, 0);
+  return `<p class="lede">${total} items to confirm with Enpro, collected from every draft screen. The decisions behind them, with why each matters and who it waits on, are in docs/planning/enpro-os-scope-gap-analysis.md. Record each answer, with its date, in docs/planning/decisions-requiring-approval.md or v2-rebaseline.md §4.</p>
+    <div class="bar-row"><input class="ctl" style="max-width:340px" data-search placeholder="Search a screen or question" aria-label="Search open items"></div>
+    ${table(['Screen', 'Module', 'To confirm'], rows)}`;
+});
+
+// ---- shell ----
+const MODS = ['Overview', 'Marketing', 'Projects', 'Engineering', 'Submittals', 'Supply chain', 'Stores', 'Production', 'Quality', 'Change & issue management', 'Customer service'];
+// visibleScreens: every screen when signed out, the "show full navigation" override is on, or there's no role
+// mapping for the signed-in role; otherwise the Overview module, that role's own screens (ROLE_SCREENS), and
+// whatever screen is currently open — a task card on Home can legitimately point outside the signed-in role's
+// own module (the way a real task hand-off would), and the rail and phone picker need a current entry to route
+// back from, not just the content underneath, which was never restricted.
+function visibleScreens(cur) {
+  const full = document.getElementById('allNavToggle').checked;
+  if (full || !ROLE || !ROLE_SCREENS[ROLE]) return S;
+  const allow = new Set([...ALWAYS_NAV, ...ROLE_SCREENS[ROLE], cur]);
+  return S.filter(s => allow.has(s.id));
+}
+function nav(cur) {
+  const vis = visibleScreens(cur);
+  const visMods = MODS.filter(m => vis.some(s => s.mod === m));
+  document.getElementById('rail').innerHTML = visMods.map(m => `<h4>${m}</h4>` + vis.filter(s => s.mod === m).map(s => `<a href="${go(s.id)}"${s.id === cur ? ' aria-current="page"' : ''}>${esc(s.nav)}</a>`).join('')).join('');
+  const p = document.getElementById('picker');
+  p.innerHTML = visMods.map(m => `<optgroup label="${m}">` + vis.filter(s => s.mod === m).map(s => `<option value="${s.id}"${s.id === cur ? ' selected' : ''}>${esc(s.nav)}</option>`).join('') + '</optgroup>').join('');
+}
+// Unchipped content on a screen carries the label passed as add()'s last argument, with the sources it was drawn from.
+// Layout, navigation and look are always RECOMMENDATION: CONTACT is a functional reference only (RR-10), and no screen is Enpro-approved.
+const evidence = s => s.r3 ? `<span>${s.src === 'RECOMMENDATION' ? '<span class="chip rec">RECOMMENDATION</span>' : `<span class="chip">${esc(s.src || 'SOURCE-DERIVED')}</span>`} ${esc(s.r3)}</span><span><span class="chip rec">RECOMMENDATION</span> Layout and look: draft, not approved by Enpro</span>` : '';
+
+// ---- sign-in (stands in for real auth) and the account menu ----
+function renderSignIn() {
+  document.body.classList.add('signed-out');
+  document.getElementById('view').innerHTML = `<div class="signin">
+    <div class="crumb">Enpro OS</div><h1>Sign in to continue</h1>
+    <p class="lede">Pick who you're reviewing this draft as. Each role gets its own Home screen and its own default
+    set of screens in the rail (03-enpro-os §2, "the two audiences") — not real authentication, just a stand-in so
+    the access model can be seen rather than only described.</p>
+    <div class="big">${Object.entries(ROLES).map(([k, v]) => `<a href="#" data-role="${esc(k)}"><b>${esc(v.label)}</b><span>${esc(v.who)}</span></a>`).join('')}</div>
+  </div>`;
+}
+function renderAccount() {
+  const el = document.getElementById('account');
+  if (!ROLE) { el.innerHTML = ''; return; }
+  const r = ROLES[ROLE] || ROLES.eng;
+  el.innerHTML = `<button type="button" class="acct-btn" id="acctBtn" aria-haspopup="true" aria-expanded="false">
+      <span class="acct-role">${esc(r.label)}</span><span class="acct-who">${esc(r.who)}</span>
+    </button>
+    <div class="acct-menu" id="acctMenu" hidden>
+      <div class="acct-menu-label">Switch role</div>
+      ${Object.entries(ROLES).map(([k, v]) => `<button type="button" class="acct-opt" data-role="${esc(k)}" aria-current="${k === ROLE}">${esc(v.label)}</button>`).join('')}
+      <hr>
+      <button type="button" class="acct-opt" data-action="tour">Replay onboarding tour</button>
+      <button type="button" class="acct-opt" data-action="signout">Sign out</button>
+    </div>`;
+}
+function chooseRole(role) {
+  ROLE = role; saveJSON('enpro-os-wf-role', role);
+  document.body.classList.remove('signed-out');
+  location.hash = 'home';
+  render();
+  if (!TOURED) { TOURED = true; saveJSON('enpro-os-wf-toured', true); startTour(); }
+}
+// One close path for the account menu, so aria-expanded can never go stale: renderAccount() rebuilds the
+// button fresh on every render() (role switch, sign-out), but Escape, an outside click and "Replay tour"
+// hide the existing menu without a render(), and used to leave acctBtn claiming it was still open.
+function closeAcctMenu() {
+  const m = document.getElementById('acctMenu'); if (m) m.hidden = true;
+  const btn = document.getElementById('acctBtn'); if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+document.getElementById('account').addEventListener('click', e => {
+  const btn = e.target.closest('#acctBtn');
+  if (btn) { const willOpen = document.getElementById('acctMenu').hidden; document.getElementById('acctMenu').hidden = !willOpen; btn.setAttribute('aria-expanded', String(willOpen)); return; }
+  const roleBtn = e.target.closest('[data-role]');
+  if (roleBtn) { chooseRole(roleBtn.dataset.role); return; }
+  const act = e.target.closest('[data-action]');
+  if (!act) return;
+  closeAcctMenu();
+  if (act.dataset.action === 'tour') startTour();
+  if (act.dataset.action === 'signout') { ROLE = null; saveJSON('enpro-os-wf-role', null); location.hash = ''; render(); }
+});
+document.addEventListener('click', e => { if (!e.target.closest('.account')) closeAcctMenu(); });
+
+// ---- first-time onboarding tour ----
+const TOUR_STEPS = [
+  { t: 'Welcome to the Enpro OS draft', b: 'A clickable draft of 13 screens across 8 modules, drawn from the current specs. Nothing here is built, and no screen has been reviewed by Enpro yet — sample data throughout.' },
+  { t: "You're signed in", b: 'The control at the top right shows who you’re viewing as. Switch role or sign out from there at any time.' },
+  { t: 'Your rail is scoped to your role', b: 'The left-hand rail (or the dropdown on a phone) only lists the screens that role would normally open. Turn on "Show full navigation", above the screen, to see every screen regardless of role.' },
+  { t: "Chips mark what's still open", b: 'An amber chip like "to confirm" is a real open question for Enpro — tap it to read the question. Every one is also collected on the Open items screen.' },
+  { t: 'Not live yet', b: 'Screens marked "coming soon" or "Phase 2" are named, not drawn — so nothing here looks more finished than it is.' },
+  { t: "That's the tour", b: 'Replay it any time from the account menu, top right.' }
+];
+let tourIdx = 0;
+let tourReturnFocus = null;
+function startTour() {
+  tourReturnFocus = document.activeElement;
+  document.querySelector('.hdr').inert = true;
+  document.querySelector('.app').inert = true;
+  tourIdx = 0;
+  document.body.classList.add('touring');
+  renderTourStep();
+}
+function endTour() {
+  document.querySelector('.hdr').inert = false;
+  document.querySelector('.app').inert = false;
+  document.body.classList.remove('touring');
+  document.getElementById('tour').innerHTML = '';
+  // tourReturnFocus can be a now-hidden element (the account menu closes itself before the tour starts),
+  // and .focus() on a hidden element is a silent no-op, not a thrown error — so check visibility, not
+  // just DOM presence, and fall back to the always-visible account button rather than losing focus to body.
+  const visible = tourReturnFocus && document.contains(tourReturnFocus) && tourReturnFocus.offsetParent !== null;
+  (visible ? tourReturnFocus : document.getElementById('acctBtn'))?.focus();
+  tourReturnFocus = null;
+}
+function renderTourStep() {
+  const s = TOUR_STEPS[tourIdx];
+  const last = tourIdx === TOUR_STEPS.length - 1;
+  document.getElementById('tour').innerHTML = `<div class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourBody" tabindex="-1">
+    <div class="tour-progress">${tourIdx + 1} of ${TOUR_STEPS.length}</div>
+    <h2 id="tourTitle">${esc(s.t)}</h2><p id="tourBody">${esc(s.b)}</p>
+    <div class="tour-actions"><button type="button" class="btn" id="tourSkip">Skip</button>
+      <div class="tour-fwd">${tourIdx > 0 ? '<button type="button" class="btn" id="tourBack">Back</button>' : ''}
+        <button type="button" class="btn primary" id="tourNext">${last ? 'Done' : 'Next'}</button></div></div>
+  </div>`;
+  document.getElementById('tourSkip').onclick = endTour;
+  document.getElementById('tourNext').onclick = () => { if (last) endTour(); else { tourIdx++; renderTourStep(); } };
+  const back = document.getElementById('tourBack'); if (back) back.onclick = () => { tourIdx--; renderTourStep(); };
+  document.getElementById('tourNext').focus();
+}
+document.getElementById('tour').addEventListener('click', e => { if (e.target.id === 'tour') endTour(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAcctMenu(); if (document.body.classList.contains('touring')) endTour(); return; }
+  if (e.key !== 'Tab' || !document.body.classList.contains('touring')) return;
+  const card = document.querySelector('.tour-card');
+  const focusable = [...card.querySelectorAll('button')];
+  if (!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  if (e.shiftKey ? document.activeElement === first || document.activeElement === card : document.activeElement === last) {
+    e.preventDefault(); (e.shiftKey ? last : first).focus();
+  }
+});
+
+function render() {
+  if (!ROLE) { renderSignIn(); return; }
+  document.body.classList.remove('signed-out');
+  renderAccount();
+  const sid = location.hash.slice(1) || 'home';
+  const s = S.find(x => x.id === sid) || S[0];
+  nav(s.id);
+  document.getElementById('view').innerHTML = `<div class="crumb">${esc(s.mod)} · ${esc(s.req)}</div><h1>${esc(s.title)}</h1>${s.body()}
+    <div class="foot"><span class="mono">${esc(s.req)}</span>${evidence(s)}${(n => n ? `<a href="#open">${n} to confirm on this screen</a>` : '')(questions(s).length)}</div>`;
+  wireSearch();
+}
+// wireSearch(): any screen that draws one <input data-search> gets a live filter over every table row on it
+// (table() tags each <tr> data-searchable already) — so a screen's own search box is a real filter, not a
+// decoration waiting on a future build.
+function wireSearch() {
+  const input = document.querySelector('#view [data-search]');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    document.querySelectorAll('#view [data-searchable]').forEach(el => {
+      el.style.display = !q || el.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+}
+document.getElementById('picker').onchange = e => { location.hash = e.target.value; };
+document.getElementById('allNavToggle').onchange = () => nav((S.find(x => x.id === (location.hash.slice(1) || 'home')) || S[0]).id);
+document.getElementById('mapToggle').onchange = render;
+document.getElementById('cleanToggle').onchange = e => document.body.classList.toggle('clean', e.target.checked);
+let toastTimer;
+function toast(msg) {
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.append(t); }
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3200);
+}
+document.getElementById('view').addEventListener('click', e => {
+  const roleLink = e.target.closest('a[data-role]');
+  if (roleLink) { e.preventDefault(); chooseRole(roleLink.dataset.role); return; }
+  const acctLink = e.target.closest('[data-action="open-account"]');
+  if (acctLink) { e.preventDefault(); e.stopPropagation(); document.getElementById('acctBtn').click(); return; }
+  const sw = e.target.closest('[data-sw]');
+  if (sw) { SW[sw.dataset.sw] = sw.dataset.val; const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  const seg = e.target.closest('[data-seg]');
+  if (seg) { seg.parentElement.querySelectorAll('[data-seg]').forEach(b => b.setAttribute('aria-pressed', b === seg)); return; }
+  // data-do="fnName" on a <button>: a module file's own top-level function (fnName), called with no arguments
+  // beyond the button itself. This is the one dispatch point for every functional CTA, so a button is never both
+  // wired for real and caught by the toast fallback below — the module author's job is to make fnName mutate()
+  // the sample data and call render(). A checkbox or select with data-do goes through the 'change' listener
+  // instead (below), never this one, so a checkbox click is never dispatched twice.
+  const doBtn = e.target.closest('button[data-do]');
+  if (doBtn) { e.preventDefault(); const fn = window[doBtn.dataset.do]; if (typeof fn === 'function') fn(doBtn); else toast(`Not wired: ${doBtn.dataset.do}`); return; }
+  const b = e.target.closest('button.btn');
+  if (b) toast(`“${b.textContent.trim()}” runs here in the build. This prototype does not save anything.`);
+});
+// A checkbox or select carries data-do on 'change', not 'click', so toggling one never double-fires against the
+// click listener above (which only matches <button data-do>). No toast fallback here — only an explicit button
+// click without a wired function gets the "not wired yet" toast.
+document.getElementById('view').addEventListener('change', e => {
+  const doEl = e.target.closest('[data-do]');
+  if (doEl) { const fn = window[doEl.dataset.do]; if (typeof fn === 'function') fn(doEl); }
+});
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+render();
+</script>
